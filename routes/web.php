@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +15,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('admin.index');
-})->name('admin.index');
+Route::controller(AuthController::class)->group(function () {
+    Route::get('/', 'login')->name('login');
+    Route::get('/register', 'register')->name('register');
+    Route::post('/login', 'signIn')->name('signIn');
+    Route::post('/register', 'signUp')->name('signUp');
+    Route::delete('/logout', 'logout')->name('logout');
+});
 
-Route::resource('admin/employees', EmployeeController::class);
-Route::post('admin/employees/upload', [EmployeeController::class, 'upload'])->name('employees.upload');
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return view('admin.index');
+    })->name('admin.index');
+    Route::resource('employees', EmployeeController::class);
+    Route::post('employees/upload', [EmployeeController::class, 'upload'])->name('employees.upload');
+});
+
