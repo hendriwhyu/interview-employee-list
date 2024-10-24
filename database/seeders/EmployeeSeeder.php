@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\DetailEmployee;
 use App\Models\Employee;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -29,14 +28,6 @@ class EmployeeSeeder extends Seeder
                 'phone_number' => '08' . rand(10000000, 99999999), // Menghasilkan nomor telepon acak
                 'entry_date' => $faker->dateTimeBetween('-5 year', 'now'), // Menggunakan Faker untuk tanggal masuk
                 'photo' => 'https://api.dicebear.com/9.x/identicon/svg?seed='.$faker->name, // Menggunakan API DiceBear untuk URL foto
-            ]);
-
-            // Mengisi data di tabel employee_details (detail pegawai)
-            DetailEmployee::create([
-                'employee_id' => $employee->id,
-                'date_of_birth' => $faker->dateTimeBetween('-60 years', '-18 years'), // Tanggal lahir antara 18-60 tahun yang lalu
-                'gender' => $faker->randomElement(['male', 'female']), // Jenis kelamin acak
-                'address' => $faker->address, // Alamat acak
             ]);
          }
     }

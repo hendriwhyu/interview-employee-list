@@ -103,7 +103,7 @@ class EmployeeController extends Controller
      */
     public function show(string $id)
     {
-        $employee = Employee::with(['documents', 'detailEmployee'])->findOrFail($id);
+        $employee = Employee::with('documents')->findOrFail($id);
 
         return view('admin.employees.show', compact('employee'));
     }
