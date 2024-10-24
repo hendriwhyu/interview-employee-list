@@ -103,7 +103,7 @@
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
                                                 <a class="dropdown-item" href="{{ url('admin/employees') }}/${employee.id}">
-                                                    <i class="bx bx-user-pin me-1"></i> Views
+                                                    <i class="bx bx-user-pin me-1"></i> View
                                                 </a>
                                             </li>
                                             <li>

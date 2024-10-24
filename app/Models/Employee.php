@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Employee extends Model
 {
@@ -22,7 +21,6 @@ class Employee extends Model
         'phone_number',
         'entry_date',
         'photo',
-        'documents'
     ];
 
     /**
@@ -33,12 +31,4 @@ class Employee extends Model
         return $this->hasMany(Document::class);
     }
 
-    /**
-     * Relasi ke model DetailEmployee (One to One)
-     * Setiap pegawai terhubung ke satu detail pegawai
-     */
-    public function detailEmployee(): HasOne
-    {
-        return $this->hasOne(DetailEmployee::class);
-    }
 }

@@ -103,7 +103,7 @@ class EmployeeController extends Controller
      */
     public function show(string $id)
     {
-        $employee = Employee::findOrFail($id);
+        $employee = Employee::with(['documents', 'detailEmployee'])->findOrFail($id);
 
         return view('admin.employees.show', compact('employee'));
     }
@@ -139,6 +139,13 @@ class EmployeeController extends Controller
         if ($employee->photo) {
             // Menghapus file gambar dari storage
             Storage::disk('public')->delete($employee->photo); // Menggunakan disk public
+        }
+
+        // Hapus semua detail employee yang terkait
+        if($employee->documents()->count() > 0){
+            foreach ($employee->documents as $document) {
+                Storage::disk('public')->delete($document->path); // Menggunakan disk public
+            }
         }
 
         // Hapus data employee

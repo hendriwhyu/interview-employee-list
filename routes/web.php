@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -24,9 +25,7 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('admin.index');
-    })->name('admin.index');
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
     Route::resource('employees', EmployeeController::class);
     Route::post('employees/upload', [EmployeeController::class, 'upload'])->name('employees.upload');
 });
