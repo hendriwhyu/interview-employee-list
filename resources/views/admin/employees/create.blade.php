@@ -3,6 +3,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.0/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
     <style>
+        .toast-top-end {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1050;
+        }
+
         /* Kustomisasi Dropzone */
         .dropzone {
             background-color: #f8f9fa; /* Warna latar belakang Dropzone */
@@ -24,16 +31,24 @@
         <span class="text-muted fw-light">Employees / </span>Create Employee
     </h4>
 
-    <div id="notification-alert" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
-        <strong id="notification-message"></strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div
+        id="sneat-toast"
+        class="bs-toast toast toast-placement-ex toast-top-end m-2"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        data-delay="3000"
+        style="display: none;"
+    >
+        <div class="toast-header">
+            <i class="bx bx-bell me-2" id="toast-icon"></i>
+            <div class="me-auto fw-semibold" id="toast-title">Notification</div>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toast-message">This is a notification message.</div>
     </div>
 
-    <div id="notification-error" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
-        <strong>Error!</strong>
-        <ol id="error-list" class="mb-0"></ol>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="mb-0">Form Employee</h5>
@@ -133,7 +148,7 @@
 
                 // Validasi jumlah file yang diupload
                 if (myDropzone.files.length > maxFiles) {
-                    showErrorNotification({ photo: [`You can only upload up to ${maxFiles} files.`] });
+                    showSneatToast({ photo: [`You can only upload up to ${maxFiles} files.`] }, 'warning');
                     return;
                 }
 
@@ -153,12 +168,12 @@
                         myDropzone.removeAllFiles();
                         $("#employee-form")[0].reset();
                         // Menampilkan notifikasi sukses
-                        showNotification('Employee created successfully!', 'success');
+                        showSneatToast('Employee created successfully!', 'success');
                     },
                     error: function(xhr) {
                         console.error(xhr.responseText); // Log error
                         const errors = xhr.responseJSON.errors; // Ambil error dari response
-                        showErrorNotification(errors); // Tampilkan notifikasi error
+                        showSneatToast(errors, 'danger'); // Tampilkan notifikasi error
                     }
                 });
             });
@@ -175,39 +190,57 @@
     });
 
 
-    function showNotification(message, type) {
-        const alertBox = $('#notification-alert');
-        const messageText = $('#notification-message');
+    function showSneatToast(message, type) {
+        const toast = new bootstrap.Toast(document.getElementById('sneat-toast'));
+        const toastElement = $('#sneat-toast');
+        const toastTitle = $('#toast-title');
+        const toastMessage = $('#toast-message');
+        const toastIcon = $('#toast-icon');
 
-        messageText.text(message);
-        alertBox.removeClass('alert-success alert-danger').addClass(`alert-${type}`);
-        alertBox.show();
+        // Atur pesan dan tipe notifikasi
+        toastTitle.text(type.charAt(0).toUpperCase() + type.slice(1));
 
-        // Auto-hide notification after 3 seconds
-        setTimeout(() => {
-            alertBox.fadeOut();
-        }, 3000);
-    }
-
-    function showErrorNotification(errors) {
-        const errorList = $('#error-list');
-        errorList.empty(); // Kosongkan daftar error
-
-        // Tambahkan setiap error ke dalam daftar
-        for (const [key, messages] of Object.entries(errors)) {
-            messages.forEach(message => {
-                errorList.append(`<li>${message}</li>`);
-            });
+        // Periksa apakah message adalah objek Laravel
+        if (typeof message === 'object') {
+            const listItems = Object.values(message).flat().map(item => `<li>${item}</li>`).join('');
+            toastMessage.html(`<ul>${listItems}</ul>`);
+        } else {
+            toastMessage.text(message);
         }
 
-        // Tampilkan notifikasi error
-        $('#notification-error').show();
+        // Bersihkan dan tambahkan kelas sesuai tipe
+        toastElement.removeClass('bg-success bg-danger bg-info bg-warning');
+        toastIcon.removeClass('bx-check-circle bx-x-circle bx-info-circle bx-error');
 
-        // Auto-hide error notification after 5 seconds
-        setTimeout(() => {
-            $('#notification-error').fadeOut();
-        }, 5000);
+        switch(type) {
+            case 'success':
+                toastElement.addClass('bg-success');
+                toastIcon.addClass('bx-check-circle');
+                break;
+            case 'danger':
+                toastElement.addClass('bg-danger');
+                toastIcon.addClass('bx-x-circle');
+                break;
+            case 'info':
+                toastElement.addClass('bg-info');
+                toastIcon.addClass('bx-info-circle');
+                break;
+            case 'warning':
+                toastElement.addClass('bg-warning');
+                toastIcon.addClass('bx-error');
+                break;
+            default:
+                toastElement.addClass('bg-secondary');
+                toastIcon.addClass('bx-bell');
+        }
+
+        // Tampilkan toast
+        toastElement.show();
+        toast.show();
     }
+
+
+
 </script>
 @endsection
 

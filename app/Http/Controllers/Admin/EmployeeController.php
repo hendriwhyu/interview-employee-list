@@ -29,8 +29,8 @@ class EmployeeController extends Controller
 
     public function upload(Request $request)
     {
-        if ($request->hasFile('photo')) {
-            $path = Storage::move($request->file('file')->getRealPath(), 'photos/' . $request->file('file')->getClientOriginalName());
+        if ($request->hasFile('file')) {
+            $path = Storage::move($request->file('file')->getRealPath(), 'temp/' . $request->file('file')->getClientOriginalName());
             // $path = $request->file('file')->store('photos', 'public');
             return response()->json(['filePath' => $path]);
         }
@@ -93,7 +93,7 @@ class EmployeeController extends Controller
             }
         }
 
-        return response()->json(['success' => 'Employee created successfully!']);
+        return redirect()->back()->with('success', 'Employee created successfully!');
     }
 
 
