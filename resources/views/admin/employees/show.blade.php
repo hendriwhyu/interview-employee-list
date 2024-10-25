@@ -39,7 +39,13 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label" for="entry-date"><strong>Entry Date</strong></label>
-                        <p class="form-control-plaintext" id="entry-date">{{ $employee->entry_date ?? '-' }}</p>
+                        <p class="form-control-plaintext" id="entry-date">
+                            @if($employee->entry_date)
+                                {{ \Carbon\Carbon::parse($employee->entry_date)->locale('id_ID')->format('l, j F Y') }}
+                            @else
+                                -
+                            @endif
+                        </p>
                     </div>
 
                     <div class="col-md-6 mb-3">
