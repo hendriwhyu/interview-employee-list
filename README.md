@@ -82,13 +82,14 @@ Your application should now be up and running.
     "data": [
         {
             "id": 1,
-            "name": "Burley King",
-            "email": "nhuels@example.net",
-            "position": "Sys Admin",
-            "phone_number": "0854042335",
-            "photo": "https://via.placeholder.com/400x400.png/00dd88?text=people+Faker+illo",
-            "created_at": "2024-10-24T09:45:50.000000Z",
-            "updated_at": "2024-10-24T09:45:50.000000Z"
+            "name": "Brain Kautzer",
+            "email": "cameron58@example.net",
+            "position": "Teller",
+            "phone_number": "0884690810",
+            "entry_date": "2020-02-11",
+            "photo": "https://api.dicebear.com/9.x/identicon/svg?seed=Dr. Abbigail Stoltenberg III",
+            "created_at": "2024-10-25T02:05:25.000000Z",
+            "updated_at": "2024-10-25T02:05:25.000000Z"
         }
     ]
 }
